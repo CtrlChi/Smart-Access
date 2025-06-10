@@ -1,0 +1,33 @@
+
+    Make Home Page
+    Make About Page
+    Make Contact Page
+
+
+    Login
+        Username (letters only)
+        PIN (numbers only, max 4 numbers, togelable visibility)
+
+    Register
+        Split Full Name to First Name, Middle Name, Last Name
+        Automatically generate username from first letter of first name and entire last name
+        Display RFID and Username after registration
+
+    
+    User Profile
+        Display Full Name (uneditable)
+        Display username (editable)
+        Display UID
+        Display RFID tag
+
+        Make sure PIN update works
+
+    Admin Dashboard
+        Separate Users from Access Logs
+            Organize Users from ID (optional, be able to sort from id, name, or role)
+            Organize Logs from date/time (optional, same sort methods as users)
+
+        Edit User
+            editable username, first, middle and last name
+            pin (numbers only, max 4 numbers)
+ 
