@@ -106,130 +106,159 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>User Home</title>
+<title>User Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(to right, #74ebd5, #ACB6E5);
-        margin: 0; padding: 20px;
-    }
-    .container {
-        max-width: 450px;
-        margin: 0 auto;
-        background: white;
+        font-family: 'Orbitron', sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        margin: 0;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        color: #f0f0f0;
     }
-    h1 {
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #111;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px #00bfff55;
+    }
+
+    h1, h2 {
         text-align: center;
-        color: #333;
+        color: #00bfff;
+        margin-bottom: 30px;
     }
+
     label {
         display: block;
         margin-top: 15px;
         font-weight: bold;
+        color: #00bfff;
     }
+
     input[type="text"],
-    input[type="password"] {
+    input[type="password"],
+    select {
         width: 100%;
-        padding: 8px 10px;
+        padding: 12px;
         margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
+        background: #1a1a1a;
+        border: 1px solid #00bfff;
+        border-radius: 8px;
+        color: #fff;
+        font-family: 'Orbitron', sans-serif;
     }
+
     input[readonly] {
-        background: #f0f0f0;
+        background: #333;
         cursor: not-allowed;
     }
+
     button {
-        margin-top: 20px;
+        margin-top: 25px;
         width: 100%;
-        background-color: #4eb6a5;
-        color: white;
+        background-color: #00bfff;
+        color: #000;
         border: none;
-        padding: 12px;
+        padding: 15px;
         font-size: 16px;
-        border-radius: 5px;
+        border-radius: 10px;
         cursor: pointer;
+        transition: background-color 0.3s ease;
     }
+
     button:hover {
-        background-color: #3a8a7b;
+        background-color: #0088cc;
     }
-    .message {
-        margin-top: 15px;
-        font-weight: bold;
-        color: #d8000c;
-    }
-    .message.success {
-        color: #4F8A10;
-    }
+
     .logout {
         text-align: right;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
+
     .logout a {
-        color: #4eb6a5;
+        color: #00bfff;
         text-decoration: none;
         font-weight: bold;
     }
+
     .logout a:hover {
         text-decoration: underline;
     }
+
+    .message {
+        margin-top: 15px;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .message.success {
+        background: #0f0;
+        color: #000;
+    }
+
+    .message:not(.success) {
+        background: #f00;
+        color: #fff;
+    }
+
     .password-toggle {
         position: relative;
         display: flex;
         align-items: center;
-        }
+    }
 
     .password-toggle input {
         flex: 1;
-        }
+    }
 
     .password-toggle .toggle-icon {
         position: absolute;
-        right: 10px;
+        right: 15px;
         cursor: pointer;
-        user-select: none;
-        font-size: 18px;
-        color: #666;
-        }
-        .input-error {
-        border: 2px solid #e74c3c;
-        background-color: #fdecea;
+        font-size: 20px;
+        color: #00bfff;
     }
-    #username-status {
-        display: block;
-        margin-top: 5px;
-        font-weight: bold;
-    }
-    #username-status.available {
-        color: #27ae60;
-    }
-    #username-status.taken {
-        color: #e74c3c;
-    }
-        select, input[type="date"], input[type="text"], button {
+
+    table {
         width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
+        margin-top: 20px;
+        border-collapse: collapse;
+        background: #1b1b1b;
+        color: #fff;
     }
 
-    button {
-        background-color: #4eb6a5;
-        color: white;
-        border: none;
-        cursor: pointer;
+    th, td {
+        padding: 12px;
+        border: 1px solid #00bfff44;
+        text-align: center;
     }
 
-    button:hover {
-        background-color: #3c9e8c;
+    th {
+        background-color: #00bfff22;
     }
 
-    
+    select {
+        background: #1a1a1a;
+        color: #fff;
+    }
+
+    #username-status.available {
+        color: #00ff99;
+    }
+
+    #username-status.taken {
+        color: #ff4444;
+    }
+
+    hr {
+        margin: 30px 0;
+        border: 1px solid #00bfff44;
+    }
 </style>
 </head>
 <body>
@@ -247,17 +276,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="POST" action="">
-
-
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required />
         <span id="username-status"></span>
-        
+
         <label for="first_name">First Name:</label>
         <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" required />
 
         <label for="middle_name">Middle Name:</label>
-        <input type="text" id="middle_name" name="middle_name" value="<?php echo htmlspecialchars($user['middle_name']); ?>"  />
+        <input type="text" id="middle_name" name="middle_name" value="<?php echo htmlspecialchars($user['middle_name']); ?>" />
 
         <label for="last_name">Last Name:</label>
         <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required />
@@ -265,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="rfid_tag">RFID Tag (read-only):</label>
         <input type="text" id="rfid_tag" name="rfid_tag" value="<?php echo htmlspecialchars($user['rfid_tag']); ?>" readonly />
 
-        <hr style="margin-top: 30px;">
+        <hr>
 
         <label>Change PIN (Optional):</label>
 
@@ -287,22 +314,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span class="toggle-icon" onclick="togglePassword('confirm_pin')">&#128065;</span>
         </div>
 
-
-        <script>
-        function togglePassword(fieldId) {
-        const input = document.getElementById(fieldId);
-        if (input.type === "password") {
-            input.type = "text";
-        } else {
-            input.type = "password";
-        }
-        }
-        </script>
-
         <button type="submit">Update Profile</button>
     </form>
 </div>
+
+<?php if ($logs_result->num_rows > 0): ?>
+<div class="container" style="margin-top: 40px;">
+    <h2>Access History</h2>
+
+    <form method="GET">
+        <label for="method_filter">Filter by Method:</label>
+        <select name="method_filter" id="method_filter" onchange="this.form.submit()">
+            <option value="">All</option>
+            <option value="RFID" <?php echo ($method_filter === 'RFID') ? 'selected' : ''; ?>>RFID</option>
+            <option value="PIN" <?php echo ($method_filter === 'PIN') ? 'selected' : ''; ?>>PIN</option>
+        </select>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Date/Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($log = $logs_result->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($log['method']); ?></td>
+                    <td><?php echo htmlspecialchars($log['status']); ?></td>
+                    <td><?php echo htmlspecialchars($log['datetime']); ?></td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
+</div>
+<?php endif; ?>
+
 <script>
+function togglePassword(fieldId) {
+    const input = document.getElementById(fieldId);
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+function onlyNumberKey(evt) {
+    const charCode = (evt.which) ? evt.which : evt.keyCode;
+    return !(charCode > 31 && (charCode < 48 || charCode > 57));
+}
+
 document.getElementById('username').addEventListener('input', function () {
     const usernameInput = this;
     const username = usernameInput.value.trim();
@@ -325,72 +385,17 @@ document.getElementById('username').addEventListener('input', function () {
                     ❌ Username is taken. Try <strong style="cursor:pointer; text-decoration:underline;" id="suggestion">${data.suggestion}</strong>
                 `;
                 statusSpan.className = 'taken';
-
                 document.getElementById('suggestion').addEventListener('click', function() {
                     usernameInput.value = data.suggestion;
                     statusSpan.textContent = '✅ Username is available';
                     statusSpan.className = 'available';
-
                     usernameInput.dispatchEvent(new Event('input'));
                 });
-            }        
+            }
         })
-        .catch(err => {
-            console.error('Error checking username:', err);
-        });
+        .catch(err => console.error('Username check failed:', err));
 });
 </script>
-<?php if ($logs_result->num_rows > 0): ?>
-<div class="container" style="margin-top: 30px;">
-    <h2 style="text-align:center;">Access History</h2>
-
-    <form method="GET" style="margin-bottom: 20px;">
-        <label for="method_filter">Method:</label>
-        <select name="method_filter" id="method_filter" onchange="this.form.submit()" style="padding: 10px; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
-            <option value="">All</option>
-            <option value="RFID" <?php echo (isset($_GET['method_filter']) && $_GET['method_filter'] === 'RFID') ? 'selected' : ''; ?>>RFID</option>
-            <option value="PIN" <?php echo (isset($_GET['method_filter']) && $_GET['method_filter'] === 'PIN') ? 'selected' : ''; ?>>PIN</option>
-        </select>
-    </form>
-
-
-    <?php if ($logs_result->num_rows > 0): ?>
-        <table style="width:100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background-color: #f2f2f2;">
-                    <th style="padding: 10px; border: 1px solid #ccc;">Method</th>
-                    <th style="padding: 10px; border: 1px solid #ccc;">Status</th>
-                    <th style="padding: 10px; border: 1px solid #ccc;">Date/Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while($log = $logs_result->fetch_assoc()): ?>
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #ccc;"><?php echo htmlspecialchars($log['method']); ?></td>
-                        <td style="padding: 8px; border: 1px solid #ccc;"><?php echo htmlspecialchars($log['status']); ?></td>
-                        <td style="padding: 8px; border: 1px solid #ccc;"><?php echo htmlspecialchars($log['datetime']); ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p style="text-align:center; color:#777;">No logs found for the selected filters.</p>
-    <?php endif; ?>
-</div>
-
-<?php endif; ?>
-
-<script>
-function onlyNumberKey(evt) {
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        evt.preventDefault();
-        return false;
-    }
-    return true;
-}
-</script>
-
 </body>
 </html>
+
