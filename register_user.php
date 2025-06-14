@@ -8,7 +8,7 @@ if ($conn->connect_error) {
 
 function generateUniqueId($conn) {
     do {
-        $id = rand(1000, 9999); // random 4-digit ID
+        $id = rand(1000, 9999); 
         $result = $conn->query("SELECT id FROM users WHERE id = $id");
     } while ($result->num_rows > 0);
     return $id;
