@@ -5,9 +5,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-$conn = new mysqli("localhost:3307", "root", "", "doorlock");
+$conn = new mysqli("localhost:3306", "root", "", "doorlock");
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connsect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 $users = $conn->query("SELECT * FROM users ORDER BY id DESC");

@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$conn = new mysqli("localhost:3307", "root", "", "doorlock");
+$conn = new mysqli("localhost:3306", "root", "", "doorlock");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -36,7 +36,7 @@ $logs_result = $stmt->get_result();
 $stmt->close();
 
 
-$stmt = $conn->prepare("SELECT first_name, middle_name, last_name, rfid_tag, pin_code, username FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT id, first_name, middle_name, last_name, rfid_tag, pin_code, username FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -276,6 +276,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="POST" action="">
+
+        <label for="id">User Id:</label>
+        <input type="text" id="id" name="id" value="<?php echo htmlspecialchars($user['id']); ?>" readonly  />
+        <span id="id-status"></span>
+
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required />
         <span id="username-status"></span>
@@ -398,4 +403,3 @@ document.getElementById('username').addEventListener('input', function () {
 </script>
 </body>
 </html>
-

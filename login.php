@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost:3307", "root", "", "doorlock");
+$conn = new mysqli("localhost:3306", "root", "", "doorlock");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -332,6 +332,5 @@ function togglePIN() {
 
 </body>
 </html>
-
 
 

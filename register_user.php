@@ -1,10 +1,19 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost:3307", "root", "", "doorlock");
+$conn = new mysqli("localhost:3306", "root", "", "doorlock");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+function generateUniqueId($conn) {
+    do {
+        $id = rand(1000, 9999); // random 4-digit ID
+        $result = $conn->query("SELECT id FROM users WHERE id = $id");
+    } while ($result->num_rows > 0);
+    return $id;
+}
+
 
 $message = "";
 $message_type = "";
@@ -37,7 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $hashed_pin = password_hash($pin_code, PASSWORD_DEFAULT);
 
-            $stmt = $conn->prepare("INSERT INTO users (first_name, middle_name, last_name, pin_code, rfid_tag, username) VALUES (?, ?, ?, ?, ?, ?)");
+            $user_id = generateUniqueId($conn);
+
+            $stmt = $conn->prepare("INSERT INTO users (id, first_name, middle_name, last_name, pin_code, rfid_tag, username) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+
             if ($stmt) {
                 $base_username = strtolower($first_name . '.' . $last_name);
                 $username = $base_username;
@@ -59,7 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $counter++;
                 }
 
-                $stmt->bind_param("ssssss", $first_name, $middle_name, $last_name, $hashed_pin, $rfid_tag, $username);
+                $stmt->bind_param("issssss", $user_id, $first_name, $middle_name, $last_name, $hashed_pin, $rfid_tag, $username);
+
                 if ($stmt->execute()) {
 
                     $del_stmt = $conn->prepare("DELETE FROM pending_rfid WHERE uid = ?");
@@ -67,10 +81,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $del_stmt->execute();
                     $del_stmt->close();
 
-                    $message = "✅ Registration successful! Your RFID UID: " . htmlspecialchars($rfid_tag) . " Your Username: " . htmlspecialchars($username);
+                    $message = "✅ Registration successful! Your User ID: " . htmlspecialchars($user_id) . "Your Username: " . htmlspecialchars($username) . "Your RFID UID: " . htmlspecialchars($rfid_tag);
                     $message_type = "success";
 
-                    header("refresh:4;url=login.php");
+                    header("refresh:8;url=login.php");
                 } else {
                     $message = "❌ Error during registration: " . $stmt->error;
                     $message_type = "error";
@@ -278,7 +292,7 @@ $conn->close();
 </header>
 
 <div class="card">
-    <h2>Door Lock User Registration</h2>
+    <h2>Smart Access User Registration</h2>
 
     <?php if ($message): ?>
         <div class="message <?php echo htmlspecialchars($message_type); ?>">
